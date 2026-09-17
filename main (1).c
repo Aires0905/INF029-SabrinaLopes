@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define TAM_ALUNO 3
+#define TAM_ALUNO 40
 
 
 #define CAD_ALUNO_SUCESSO -1
