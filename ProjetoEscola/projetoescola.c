@@ -873,7 +873,7 @@ void listarUmaDisciplina(Disciplina *listaDisci) {
     printf("Professor Responsavel: %s\n", disci->D.nome);
     printf("Alunos Matriculados (%d):\n", disci->qtdAlunos);
 
-    ElementoAluno *elem = disc->M.proximo;
+    ElementoAluno *elem = disci->M.proximo;
     while (elem != NULL) {
         printf("  - Mat: %d | Nome: %s\n", elem->aluno->matricula, elem->aluno->nome);
         elem = elem->proximo;
