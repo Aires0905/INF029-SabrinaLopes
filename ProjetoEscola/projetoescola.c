@@ -682,10 +682,10 @@ int cadastrarDisciplina(Disciplina **inicio, Professor *listaProf, int *proxCodi
         return ERRO;
     }
 
-    nova->profDisciplina = prof;
-    nova->alunosMatriculados = NULL;
+    nova->D = prof;
+    nova->M.aluno = NULL;
     nova->qtdAlunos = 0;
-    nova->proximo = NULL;
+    nova->M.proximo = NULL;
 
     if (*inicio == NULL) {
         *inicio = nova;
@@ -712,7 +712,7 @@ void listarDisciplinas(Disciplina *inicio) {
     while (atual != NULL) {
         printf("Codigo: %d | Nome: %s | Semestre: %d | Professor: %s | Alunos: %d\n",
                atual->codigo, atual->nome, atual->semestre,
-               (atual-D ? atual-D->nome : "Sem Prof"),
+               (atual->D ? atual->D.nome : "Sem Prof"),
                atual->qtdAlunos);
         atual = atual->proximo;
     }
@@ -746,7 +746,7 @@ int atualizarDisciplina(Disciplina *inicio, Professor *listaProf) {
 
     Professor *prof = buscarProfePorMat(listaProf, matProf);
     if (prof != NULL) {
-        atual-D = prof;
+        atual->D = prof;
     } else {
         printf("Professor nao encontrado. Mantido o anterior.\n");
     }
@@ -778,7 +778,7 @@ int excluirDisciplina(Disciplina **inicio) {
         anterior->proximo = atual->proximo;
     }
 
-    ElementoAluno *elem = atual-M;
+    ElementoAluno *elem = atual->M.proximo;
     while (elem != NULL) {
         ElementoAluno *temp = elem;
         elem = elem->proximo;
@@ -809,9 +809,9 @@ int inserirAlunoDisciplina(Disciplina *listaDisci, Aluno *listaAluno) {
 
     ElementoAluno *novoElem = (ElementoAluno *)malloc(sizeof(ElementoAluno));
     novoElem->aluno = aluno;
-    novoElem->proximo = disc-M;
-    disc-M = novoElem;
-    disc->qtdAlunos++;
+    novoElem->proximo = disci-M.proximo;
+    disci->M.proximo = novoElem;
+    disci->qtdAlunos++;
 
     return CAD_SUCESSO;
 }
@@ -831,7 +831,7 @@ int excluirAlunoDisciplina(Disciplina *listaDisci) {
 
     if (disci == NULL) return ERRO;
 
-    ElementoAluno *atual = disci-M;
+    ElementoAluno *atual = disci->M.proximo;
     ElementoAluno *anterior = NULL;
 
     while (atual != NULL && atual->aluno->matricula != matAluno) {
@@ -842,7 +842,7 @@ int excluirAlunoDisciplina(Disciplina *listaDisci) {
     if (atual == NULL) return ERRO;
 
     if (anterior == NULL) {
-        disci-M = atual->proximo;
+        disci->M = atual->proximo;
     } else {
         anterior->proximo = atual->proximo;
     }
@@ -870,10 +870,10 @@ void listarUmaDisciplina(Disciplina *listaDisci) {
 
     printf("\n--- Detalhes da Disciplina ---\n");
     printf("Codigo: %d | Nome: %s | Semestre: %d\n", disci->codigo, disci->nome, disci->semestre);
-    printf("Professor Responsavel: %s\n", (disci-D ? disci-D->nome : "Nenhum"));
-    printf("Alunos Matriculados (%d):\n", disci-A);
+    printf("Professor Responsavel: %s\n", (disci->D ? disci->D.nome : "Nenhum"));
+    printf("Alunos Matriculados (%d):\n", disci->qtdAlunos);
 
-    ElementoAluno *elem = disc-M;
+    ElementoAluno *elem = disc->M;
     while (elem != NULL) {
         printf("  - Mat: %d | Nome: %s\n", elem->aluno->matricula, elem->aluno->nome);
         elem = elem->proximo;
@@ -978,12 +978,12 @@ void relatorioAlunosMenos3Disciplinas(Aluno *inicioAluno, Disciplina *inicioDisc
     printf("\n--- Alunos Matriculados em menos de 3 Disciplinas ---\n");
     Aluno *alu = inicioAluno;
 
-    while (a != NULL) {
+    while (alu != NULL) {
         int iCont = 0;
         Disciplina *disci = inicioDisc;
 
         while (disci != NULL) {
-            ElementoAluno *elem = d-M;
+            ElementoAluno *elem = disci->M.proximo;
             while (elem != NULL) {
                 if (elem->aluno->matricula == a->matricula) {
                     iCont++;
@@ -1009,7 +1009,7 @@ void relatorioDisciplinasMais40(Disciplina *inicioDisc) {
         if (disci->qtdAlunos > 40) {
             printf("Codigo: %d | Nome: %s | Professor: %s | Qtd Alunos: %d\n",
                    disci->codigo, disci->nome,
-                   (disci-D ? disci-D->nome : "Sem Prof"),
+                   (disci->D ? disci->D.nome : "Sem Prof"),
                    disci->qtdAlunos);
         }
         disci = disci->proximo;

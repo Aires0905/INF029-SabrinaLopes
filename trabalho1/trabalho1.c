@@ -92,6 +92,7 @@ int teste(int a)
 int q1(char data[])
 {
   int datavalida = 1;
+  
 
   //quebrar a string data em strings sDia, sMes, sAno
 
