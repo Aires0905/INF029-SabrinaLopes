@@ -10,9 +10,9 @@
 //  O aluno deve preencher seus dados abaixo, e implementar as questões do trabalho
 
 //  ----- Dados do Aluno -----
-//  Nome:
-//  email:
-//  Matrícula:
+//  Nome: Sabrina Aires Silva Lopes
+//  email: sabrinaairessilvalopes@gmail.com
+//  Matrícula: 20261160040
 //  Semestre:
 
 //  Copyright © 2016 Renato Novais. All rights reserved.
@@ -134,10 +134,12 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
       dma.retorno = 3;
       return dma;
     }else{
-      //verifique se a data final não é menor que a data inicial
-      
-      //calcule a distancia entre as datas
-
+      //verifique se a data final não é menor que a data inicial;
+      //tranformar as datas em INT, depois comparas  os dois numeros   
+      //calcule a distancia entre as datas;
+      //colocar como definiçao que um mes tem que ter exatamente 30 e 31 dias, com exeção de fevereiro, e tem que ter as exeções do ano bissexto!!!
+      //usar um swith case para cada exeção das datas 
+      //para o calculo, vamos dividir para conquistar, fazer uma função para fazer esse calculo
 
       //se tudo der certo
       dma.retorno = 1;
