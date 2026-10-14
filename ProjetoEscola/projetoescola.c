@@ -1,8 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
 
+<<<<<<< HEAD
+=======
 #define CAD_SUCESSO -1
 #define MATRICULA_INVALIDA -2
 #define ATUALIZACAO_SUCESSO 3
@@ -1015,3 +1013,5 @@ void relatorioDisciplinasMais40(Disciplina *inicioDisc) {
         disci = disci->proximo;
     }
 }
+
+>>>>>>> aaebdb421aaadbf154d853a9b68d4fda185da2c9

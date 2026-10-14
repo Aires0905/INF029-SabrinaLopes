@@ -1,10 +1,3 @@
-// #################################################
-//  Instituto Federal da Bahia
-//  Salvador - BA
-//  Curso de Análise e Desenvolvimento de Sistemas http://ads.ifba.edu.br
-//  Disciplina: INF029 - Laboratório de Programação
-//  Professor: Renato Novais - renato@ifba.edu.br
-
 //  ----- Orientações gerais -----
 //  Descrição: esse arquivo deve conter as questões do trabalho do aluno.
 //  O aluno deve preencher seus dados abaixo, e implementar as questões do trabalho
@@ -21,10 +14,13 @@
 // #################################################
 
 #include <stdio.h>
+#include <string.h>
 #include "trabalho1.h" 
 #include <stdlib.h>
 
 DataQuebrada quebraData(char data[]);
+int anoBissexto(int ano);
+int diasMes(int mes, int ano);
 
 /*
 ## função utilizada para testes  ##
@@ -89,13 +85,35 @@ int teste(int a)
     Não utilizar funções próprias de string (ex: strtok)   
     pode utilizar strlen para pegar o tamanho da string
  */
-int q1(char data[])
-{
-  int datavalida = 1;
+int q1(char data[]){
   
+    int datavalida = 1;
 
+    DataQuebrada dq = quebraData(data);
+
+    if (dq.valido == 0){    
+        datavalida = 0;
+    }else {
+
+        if (dq.iAno >= 0 && dq.iAno < 100) {
+            if (dq.iAno >= 50)
+              dq.iAno += 1900;
+            else
+              dq.iAno += 2000;
+        }
+
+        if (dq.iMes < 1 || dq.iMes > 12)
+            datavalida = 0;
+
+        else if (dq.iAno < 1)
+            datavalida = 0;
+        else{
+            int maxDias = diasMes(dq.iMes, dq.iAno);
+            if (dq.iDia < 1 || dq.iDia > maxDias)
+            datavalida = 0;
+        }
+    }
   //quebrar a string data em strings sDia, sMes, sAno
-
 
   //printf("%s\n", data);
 
@@ -121,8 +139,7 @@ int q1(char data[])
     4 -> datainicial > datafinal
     Caso o cálculo esteja correto, os atributos qtdDias, qtdMeses e qtdAnos devem ser preenchidos com os valores correspondentes.
  */
-DiasMesesAnos q2(char datainicial[], char datafinal[])
-{
+DiasMesesAnos q2(char datainicial[], char datafinal[]){
 
     //calcule os dados e armazene nas três variáveis a seguir
     DiasMesesAnos dma;
@@ -134,6 +151,44 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
       dma.retorno = 3;
       return dma;
     }else{
+        DataQuebrada di = quebraData(datainicial);
+        DataQuebrada df = quebraData(datafinal);
+
+        if (di.iAno < 100) di.iAno += (di.iAno >= 50) ? 1900 : 2000;
+        if (df.iAno < 100) df.iAno += (df.iAno >= 50) ? 1900 : 2000;
+
+        int valorIni = di.iAno * 10000 + di.iMes * 100 + di.iDia;
+        int valorFim = df.iAno * 10000 + df.iMes * 100 + df.iDia;
+
+        if (valorIni > valorFim) {
+            dma.retorno = 4;
+            return dma;
+        }
+
+        int anos = df.iAno - di.iAno;
+        int meses = df.iMes - di.iMes;
+        int dias = df.iDia - di.iDia;
+
+        if (dias < 0) {
+            meses--;
+            int mesAnterior = df.iMes - 1;
+            int anoAnterior = df.iAno;
+            if (mesAnterior < 1) {
+                mesAnterior = 12;
+                anoAnterior--;
+            }
+            dias += diasNoMes(mesAnterior, anoAnterior);
+        }
+
+        if (meses < 0) {
+            anos--;
+            meses += 12;
+        }
+
+        dma.qtdAnos = anos;
+        dma.qtdMeses = meses;
+        dma.qtdDias = dias;
+    
       //verifique se a data final não é menor que a data inicial;
       //tranformar as datas em INT, depois comparas  os dois numeros   
       //calcule a distancia entre as datas;
@@ -142,8 +197,8 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
       //para o calculo, vamos dividir para conquistar, fazer uma função para fazer esse calculo
 
       //se tudo der certo
-      dma.retorno = 1;
-      return dma;
+        dma.retorno = 1;
+        return dma;
       
     }
     
@@ -159,12 +214,54 @@ DiasMesesAnos q2(char datainicial[], char datafinal[])
  @saida
     Um número n >= 0.
  */
-int q3(char *texto, char c, int isCaseSensitive)
-{
-    int qtdOcorrencias = -1;
+int q3(char *texto, char c, int isCaseSensitive){
+        int qtdOcorrencias = 0;
+
+    int i = 0;
+
+    char busca = c;
+    if (!isCaseSensitive) {
+        if (busca >= 'A' && busca <= 'Z')
+            busca += 32;
+    }
+
+    while (texto[i] != '\0') {
+        char atual = texto[i];
+        if (!isCaseSensitive) {
+            if (atual >= 'A' && atual <= 'Z')
+                atual += 32;
+            if (atual == 'á' || atual == 'à' || atual == 'ã' || atual == 'â') 
+                atual = 'a';
+            if (atual == 'é' || atual == 'ê') 
+                atual = 'e';
+            if (atual == 'í') 
+                atual = 'i';
+            if (atual == 'ó' || atual == 'õ' || atual == 'ô') 
+                atual = 'o';
+            if (atual == 'ú') 
+                atual = 'u';
+            
+            if (busca == 'á' || busca == 'à' || busca == 'ã' || busca == 'â') 
+                busca = 'a';
+            if (busca == 'é' || busca == 'ê') 
+                busca = 'e';
+            if (busca == 'í') 
+                busca = 'i';
+            if (busca == 'ó' || busca == 'õ' || busca == 'ô') 
+                busca = 'o';
+            if (busca == 'ú') 
+                busca = 'u';
+        }
+
+        if (atual == busca) {
+            qtdOcorrencias++;
+        }
+        i++;
+    }
 
     return qtdOcorrencias;
 }
+
 
 /*
  Q4 = encontrar palavra em texto
@@ -181,9 +278,26 @@ int q3(char *texto, char c, int isCaseSensitive)
         O retorno da função, n, nesse caso seria 1;
 
  */
-int q4(char *strTexto, char *strBusca, int posicoes[30])
-{
-    int qtdOcorrencias = -1;
+int q4(char *strTexto, char *strBusca, int posicoes[30]){
+    int qtdOcorrencias = 0;
+    int i = 0, j, k;
+    int posMatriz = 0;
+
+    while (strTexto[i] != '\0') {
+        j = 0;
+        k = i;
+        while (strTexto[k] != '\0' && strBusca[j] != '\0' && strTexto[k] == strBusca[j]) {
+            k++;
+            j++;
+        }
+
+        if (strBusca[j] == '\0') { 
+            qtdOcorrencias++;
+            posicoes[posMatriz++] = i + 1;    
+            posicoes[posMatriz++] = k;        
+        }
+        i++;
+    }
 
     return qtdOcorrencias;
 }
@@ -198,10 +312,21 @@ int q4(char *strTexto, char *strBusca, int posicoes[30])
     Número invertido
  */
 
-int q5(int num)
-{
+int q5(int num){
+    int invertido = 0;
+    int negativo = 0;
 
-    return num;
+    if (num < 0) {
+        negativo = 1;
+        num = -num;
+    }
+
+    while (num > 0) {
+        invertido = (invertido * 10) + (num % 10);
+        num /= 10;
+    }
+
+    return negativo ? -invertido : invertido;
 }
 
 /*
@@ -214,9 +339,31 @@ int q5(int num)
     Quantidade de vezes que número de busca ocorre em número base
  */
 
-int q6(int numerobase, int numerobusca)
-{
-    int qtdOcorrencias;
+int q6(int numerobase, int numerobusca){
+    if(numerobusca == 0);{
+        if (numerobase == 0){
+            return 1;
+        }
+        return 0;
+    }
+
+    int qtdOcorrencias = 0;
+    int tempBusca = numerobusca;
+    int fator = 1;
+
+    while (tempBusca > 0){
+        fator *= 10;
+        tempBusca /= 10;
+    }
+    
+    int tempBase = numerobase;
+    while (tempBase >= numerobusca){
+        if (tempBase % fator == numerobusca){
+            qtdOcorrencias++;
+        }
+        tempBase /= 10;
+    }
+
     return qtdOcorrencias;
 }
 
@@ -239,8 +386,8 @@ int q6(int numerobase, int numerobusca)
 
 
 DataQuebrada quebraData(char data[]){
-  DataQuebrada dq;
-  char sDia[3];
+    DataQuebrada dq;
+    char sDia[3];
 	char sMes[3];
 	char sAno[5];
 	int i; 
@@ -252,8 +399,8 @@ DataQuebrada quebraData(char data[]){
 		sDia[i] = '\0';  // coloca o barra zero no final
 	}else {
 		dq.valido = 0;
-    return dq;
-  }  
+        return dq;
+    }  
 	
 
 	int j = i + 1; //anda 1 cada para pular a barra
@@ -268,8 +415,8 @@ DataQuebrada quebraData(char data[]){
 		sMes[i] = '\0';  // coloca o barra zero no final
 	}else {
 		dq.valido = 0;
-    return dq;
-  }
+        return dq;
+    }
 	
 
 	j = j + 1; //anda 1 cada para pular a barra
@@ -284,15 +431,28 @@ DataQuebrada quebraData(char data[]){
 		sAno[i] = '\0';  // coloca o barra zero no final
 	}else {
 		dq.valido = 0;
-    return dq;
-  }
+        return dq;
+    }
 
-  dq.iDia = atoi(sDia);
-  dq.iMes = atoi(sMes);
-  dq.iAno = atoi(sAno); 
+    dq.iDia = atoi(sDia);
+    dq.iMes = atoi(sMes);
+    dq.iAno = atoi(sAno); 
 
 	dq.valido = 1;
     
-  return dq;
+    return dq;
 }
 
+int anoBissexto(int ano) {
+    if ((ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0))
+        return 1;
+    return 0;
+}
+int diasMes(int mes, int ano) {
+    int dias[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (mes == 2 && ehBissexto(ano))
+        return 29;
+    if (mes >= 1 && mes <= 12)
+        return dias[mes];
+    return 0;
+}
