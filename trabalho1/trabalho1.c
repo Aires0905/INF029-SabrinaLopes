@@ -177,7 +177,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]){
                 mesAnterior = 12;
                 anoAnterior--;
             }
-            dias += diasNoMes(mesAnterior, anoAnterior);
+            dias += diasMes(mesAnterior, anoAnterior);
         }
 
         if (meses < 0) {
@@ -215,7 +215,7 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]){
     Um número n >= 0.
  */
 int q3(char *texto, char c, int isCaseSensitive){
-        int qtdOcorrencias = 0;
+    int qtdOcorrencias = 0;
 
     int i = 0;
 
@@ -450,7 +450,7 @@ int anoBissexto(int ano) {
 }
 int diasMes(int mes, int ano) {
     int dias[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    if (mes == 2 && ehBissexto(ano))
+    if (mes == 2 && anoBissexto(ano))
         return 29;
     if (mes >= 1 && mes <= 12)
         return dias[mes];
