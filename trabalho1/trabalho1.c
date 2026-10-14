@@ -215,11 +215,11 @@ DiasMesesAnos q2(char datainicial[], char datafinal[]){
     Um número n >= 0.
  */
 int q3(char *texto, char c, int isCaseSensitive){
+    
     int qtdOcorrencias = 0;
-
     int i = 0;
-
     char busca = c;
+
     if (!isCaseSensitive) {
         if (busca >= 'A' && busca <= 'Z')
             busca += 32;
@@ -230,27 +230,7 @@ int q3(char *texto, char c, int isCaseSensitive){
         if (!isCaseSensitive) {
             if (atual >= 'A' && atual <= 'Z')
                 atual += 32;
-            if (atual == 'á' || atual == 'à' || atual == 'ã' || atual == 'â') 
-                atual = 'a';
-            if (atual == 'é' || atual == 'ê') 
-                atual = 'e';
-            if (atual == 'í') 
-                atual = 'i';
-            if (atual == 'ó' || atual == 'õ' || atual == 'ô') 
-                atual = 'o';
-            if (atual == 'ú') 
-                atual = 'u';
             
-            if (busca == 'á' || busca == 'à' || busca == 'ã' || busca == 'â') 
-                busca = 'a';
-            if (busca == 'é' || busca == 'ê') 
-                busca = 'e';
-            if (busca == 'í') 
-                busca = 'i';
-            if (busca == 'ó' || busca == 'õ' || busca == 'ô') 
-                busca = 'o';
-            if (busca == 'ú') 
-                busca = 'u';
         }
 
         if (atual == busca) {
